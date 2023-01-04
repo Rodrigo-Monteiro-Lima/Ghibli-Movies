@@ -1,31 +1,26 @@
 import { useContext } from 'react';
-import PropTypes from 'prop-types';
 import Header from '../components/Header';
-import Movie from '../components/Movie';
 import FilmsContext from '../context/FilmsContext';
-import './Home.css';
+import FilmCard from '../components/FilmCard';
 
-function Home({ history }) {
-  const films = useContext(FilmsContext);
+export default function Home() {
+  const { films, favorites } = useContext(FilmsContext);
+
   return (
     <>
-      <Header history={ history } />
-      <h1>Films</h1>
-      <div className="movies">
-        {films.films && films.films.map((film) => (
-          <Movie
-            film={ film }
-            key={ film.id }
-            handleFavorite={ films.handleFavorite }
-          />
-        ))}
-      </div>
+      <Header />
+      <main>
+        <h1>Films</h1>
+        <section>
+          {films.map((film) => (
+            <FilmCard
+              key={ film.id }
+              film={ film }
+              isFavorite={ favorites.some((favorite) => favorite.id === film.id) }
+            />
+          ))}
+        </section>
+      </main>
     </>
   );
 }
-
-Home.propTypes = {
-  history: PropTypes.shape().isRequired,
-};
-
-export default Home;

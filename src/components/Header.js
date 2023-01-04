@@ -1,17 +1,29 @@
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { Link, useHistory } from 'react-router-dom';
+import { FaHeart } from 'react-icons/fa';
+import { GiFilmSpool } from 'react-icons/gi';
+import logo from '../images/logo_ghibli.png';
+import '../styles/Header.css';
 
-export default function Header({ history }) {
+export default function Header() {
+  const { location: { pathname } } = useHistory();
+
   return (
     <header>
+      <img src={ logo } alt="logo-ghibli" />
       <nav>
-        {history.location.pathname === '/'
-          ? <Link to="/favorites">Favorites</Link> : <Link to="/">Films</Link>}
+        { pathname === '/favorites'
+          ? (
+            <Link to="/">
+              <GiFilmSpool />
+              Films
+            </Link>
+          ) : (
+            <Link to="/favorites">
+              <FaHeart />
+              Favorites
+            </Link>
+          )}
       </nav>
     </header>
   );
 }
-
-Header.propTypes = {
-  history: PropTypes.shape().isRequired,
-};

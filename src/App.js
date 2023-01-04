@@ -1,12 +1,15 @@
 import { Route, Switch } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import FilmsContext from './context/FilmsContext';
+import './styles/App.css';
+
 import Home from './pages/Home';
 import Favorites from './pages/Favorites';
-import FilmsProvider from './context/FimlsProvider';
 
 function App() {
   const [films, setFilms] = useState([]);
   const [favorites, setFavorites] = useState([]);
+
   useEffect(() => {
     fetch('https://ghibliapi.herokuapp.com/films')
       .then((result) => result.json())
@@ -14,23 +17,29 @@ function App() {
       .catch((error) => console.error(error));
   }, []);
 
-  const handleFavorite = (movie) => {
-    if (favorites.includes(movie)) {
-      const newFavorites = favorites.filter((film) => film.id !== movie.id);
+  function toggleFavorite(item) {
+    const isAlreadyFavorite = favorites.find((favorite) => favorite.id === item.id);
+    if (isAlreadyFavorite) {
+      const newFavorites = favorites.filter((favorite) => favorite.id !== item.id);
       setFavorites(newFavorites);
     } else {
-      setFavorites([...favorites, movie]);
+      setFavorites([...favorites, item]);
     }
-    console.log();
+  }
+
+  const context = {
+    films,
+    favorites,
+    toggleFavorite,
   };
-  const value = { films, favorites, handleFavorite };
+
   return (
-    <FilmsProvider value={ value }>
+    <FilmsContext.Provider value={ context }>
       <Switch>
-        <Route exact path="/" component={ Home } />
         <Route path="/favorites" component={ Favorites } />
+        <Route path="/" component={ Home } />
       </Switch>
-    </FilmsProvider>
+    </FilmsContext.Provider>
   );
 }
 
