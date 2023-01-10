@@ -11,7 +11,7 @@ function App() {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    fetch('https://ghibliapi.herokuapp.com/films')
+    fetch('https://api-trybe-frontend.vercel.app/api/ghibli-animations')
       .then((result) => result.json())
       .then((data) => setFilms(data))
       .catch((error) => console.error(error));
